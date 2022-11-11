@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <vector>
 #include <cmath>
-#define NUM_THREADS 2000
+#define NUM_THREADS 500
 using namespace std;
 
 
@@ -74,12 +74,15 @@ void blur(int num, int blurringLevel){
       originalRed[j] = arr_original [i + 2];
       j++;
    }
+   #pragma omp parallel
+   {
+   #pragma omp for
    for(int i = 0; i < width*height; i++){
       blurredBlue[i] = matrixBlurring(originalBlue, width, height, blurringLevel, i);
       blurredRed[i] = matrixBlurring(originalRed, width, height, blurringLevel, i);
       blurredGreen[i] = matrixBlurring(originalGreen, width, height, blurringLevel, i);
    }
-   
+   }
    //New Image
    j = 0;
    for(int i = 0; i < width*height*3; i += 3){
@@ -101,10 +104,17 @@ void blur(int num, int blurringLevel){
 
 int main(){
    omp_set_num_threads(NUM_THREADS);
-   #pragma omp parallel
    //#pragma omp for
-   for (int i = 0; i < 3; i++){
-      blur(i+1,11);
+
+   double t1 = omp_get_wtime();
+   for (int i = 0; i < 2; i++){
+      for (int j = 1; j <= 2; j++) {
+      blur(i+1,j);
+      }
    }
+   
+   double t2=omp_get_wtime();
+   double tiempo=t2-t1;
+   printf("tomo (%lf) segundos\n", tiempo);
    return 0;
 }
