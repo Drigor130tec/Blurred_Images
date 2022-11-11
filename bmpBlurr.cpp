@@ -108,7 +108,7 @@ int main(){
 
    double t1 = omp_get_wtime();
    for (int i = 0; i < 2; i++){
-      for (int j = 1; j <= 2; j++) {
+      for (int j = 1; j <= 20; j++) {
       blur(i+1,j);
       }
    }
