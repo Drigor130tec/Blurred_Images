@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <vector>
 #include <cmath>
-#define NUM_THREADS 20
+#define NUM_THREADS 2000
 using namespace std;
 
 
@@ -100,8 +100,9 @@ void blur(int num, int blurringLevel){
 
 
 int main(){
+   omp_set_num_threads(NUM_THREADS);
    #pragma omp parallel
-   #pragma omp for
+   //#pragma omp for
    for (int i = 0; i < 3; i++){
       blur(i+1,11);
    }
